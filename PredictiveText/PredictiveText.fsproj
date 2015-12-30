@@ -41,6 +41,8 @@
   <ItemGroup>
     <None Include="DUsAndMatching.fsx" />
     <None Include="Maps.fsx" />
+    <None Include="ListsAndMatching.fsx" />
+    <None Include="Transporter.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Trie.fs" />
