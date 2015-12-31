@@ -26,3 +26,17 @@
                 let newMap = innerMap |> Map.add ch newInnerTrie
                 { currentTrie with children = newMap }
         innerInsertChars (word |> Seq.toList) initialTrie
+
+    let containsWord word trie =
+        let rec containsChars charList currentTrie =
+             match charList with
+             | [] -> Some currentTrie.flag
+             | ch::rest -> 
+                 match Map.tryFind ch currentTrie.children with
+                 | None -> None
+                 | Some child -> containsChars rest child
+        let wordFound = containsChars (word |> List.ofSeq) trie
+        match wordFound with
+        | Some IncompleteWord -> false
+        | Some EndOfWord -> true
+        | None -> false
