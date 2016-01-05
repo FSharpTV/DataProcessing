@@ -40,3 +40,46 @@
         | Some IncompleteWord -> false
         | Some EndOfWord -> true
         | None -> false
+
+    let allSuffixes initialPrefix initialTrie = 
+        let rec innerAllSuffixes prefix currentTrie currentResults =
+            let newResults =
+                if currentTrie.flag = EndOfWord then
+                    currentResults |> Set.add prefix
+                else
+                    currentResults
+
+            if currentTrie.children.Count = 0 then
+                newResults
+            else
+                currentTrie.children
+                |> Map.fold (
+                    fun resultsSoFar ch childTrie ->
+                        let newPrefix = prefix + string ch
+                        innerAllSuffixes newPrefix childTrie resultsSoFar)
+                    newResults
+
+        let results = Set.empty
+        innerAllSuffixes initialPrefix initialTrie results
+
+    let tryFindPrefix prefix initialTrie : Option<Trie> =
+        prefix
+        |> Seq.fold (
+            fun trieOpt ch ->
+                match trieOpt with
+                | None -> None
+                | Some trie -> trie.children |> Map.tryFind ch)
+            initialTrie
+
+    let tryFindSuffixes prefix trieOpt : List<string> =
+        match trieOpt with
+        | None -> []
+        | Some trie -> trie |> allSuffixes prefix |> Seq.toList
+
+    let autoComplete prefix initialTrie = 
+
+        let currentTrieOpt = Some (initialTrie) |> tryFindPrefix prefix
+
+        let possibleWords = tryFindSuffixes prefix currentTrieOpt
+
+        possibleWords

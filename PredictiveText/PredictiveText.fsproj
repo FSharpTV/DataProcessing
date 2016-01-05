@@ -46,6 +46,7 @@
     <None Include="Maps.fsx" />
     <Compile Include="Lookup.fsx" />
     <None Include="SuffixLookup.fsx" />
+    <None Include="PrefixLookup.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fib.fsx" />
