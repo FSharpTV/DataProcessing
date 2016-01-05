@@ -45,11 +45,12 @@
     <None Include="Transporter.fsx" />
     <None Include="Maps.fsx" />
     <Compile Include="Lookup.fsx" />
-    <Compile Include="SetPlay.fsx" />
-    <Compile Include="Soliloquy.fsx" />
+    <None Include="SuffixLookup.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fib.fsx" />
     <Compile Include="insertWord.fsx" />
+    <Compile Include="SetPlay.fsx" />
+    <Compile Include="Soliloquy.fsx" />
   </ItemGroup>
 </Project>
