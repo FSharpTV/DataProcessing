@@ -1,4 +1,4 @@
-﻿module FSharp.TV.Trie
+﻿module FSharp.TV.Engine
 
     type NodeFlag =
         | EndOfWord
@@ -8,11 +8,11 @@
         { children : Map<char, Trie>
           flag : NodeFlag }
 
-    let emptyTrie =
+    let private emptyTrie =
         { children = Map.empty
           flag = IncompleteWord }
 
-    let insertWord word initialTrie =
+    let private insertWord word initialTrie =
         let rec innerInsertChars charList currentTrie =
             match charList with
             | [] -> { emptyTrie with flag = EndOfWord }
@@ -26,8 +26,8 @@
                 let newMap = innerMap |> Map.add ch newInnerTrie
                 { currentTrie with children = newMap }
         innerInsertChars (word |> Seq.toList) initialTrie
-
-    let containsWord word trie =
+     
+    let private containsWord word trie =
         let rec containsChars charList currentTrie =
              match charList with
              | [] -> Some currentTrie.flag
@@ -41,7 +41,7 @@
         | Some EndOfWord -> true
         | None -> false
 
-    let allSuffixes initialPrefix initialTrie = 
+    let private allSuffixes initialPrefix initialTrie = 
         let rec innerAllSuffixes prefix currentTrie currentResults =
             let newResults =
                 if currentTrie.flag = EndOfWord then
@@ -62,7 +62,7 @@
         let results = Set.empty
         innerAllSuffixes initialPrefix initialTrie results
 
-    let tryFindPrefix prefix initialTrie : Option<Trie> =
+    let private tryFindPrefix prefix initialTrie : Option<Trie> =
         prefix
         |> Seq.fold (
             fun trieOpt ch ->
@@ -71,15 +71,44 @@
                 | Some trie -> trie.children |> Map.tryFind ch)
             initialTrie
 
-    let tryFindSuffixes prefix trieOpt : List<string> =
+    let private tryFindSuffixes prefix trieOpt : List<string> =
         match trieOpt with
         | None -> []
         | Some trie -> trie |> allSuffixes prefix |> Seq.toList
 
-    let autoComplete prefix initialTrie = 
+    let private autoComplete prefix initialTrie = 
 
         let currentTrieOpt = Some (initialTrie) |> tryFindPrefix prefix
 
         let possibleWords = tryFindSuffixes prefix currentTrieOpt
 
         possibleWords
+
+    ///This response is returned when a call has been made to GetPossibleWords the property possibleWords will contain a sequence of all the words found, if any. The property dictionary is the Trie in which the words were found in.
+    type AutoCompleteResponse =
+        { possibleWords : seq<string>
+          dictionary : Trie }
+
+    ///This response is returned when a call to Contains is made, it has a property call exists that signifies if the word is in the underlying trie. The property dictionary is the Trie in which the word can be found.
+    type ContainsResponse =
+        { exists : bool
+          dictionary: Trie }
+
+    ///Allow the dictionary to have new words added to it
+    let Add word dictionary =
+        printfn "Adding word '%s' to the dictionary" word
+        let newDict = insertWord word dictionary
+        printfn "Word '%s' Added to the dictionary" word
+        newDict
+
+    ///Attempt to locate possible words from the given word prefix. For example, given 'th' should return a list containing 'the'
+    let GetPossibleWords prefix dictionary =
+        printfn "Attempting to autocomplete for %A." prefix
+        let possibleWords = autoComplete prefix dictionary |> List.toSeq
+        { possibleWords = possibleWords; dictionary = dictionary }
+
+    ///Check if the dictionary contains the given word.
+    let Contains word dictionary =
+        printfn "Check if '%A' exists in the predictive text engine" word
+        let exists = containsWord word dictionary
+        { exists = exists; dictionary = dictionary }

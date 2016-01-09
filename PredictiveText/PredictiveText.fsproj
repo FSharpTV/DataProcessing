@@ -15,20 +15,17 @@
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <ConsolePause>false</ConsolePause>
-    <PlatformTarget>
-    </PlatformTarget>
+    <PlatformTarget></PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <ConsolePause>false</ConsolePause>
     <GenerateTailCalls>true</GenerateTailCalls>
-    <PlatformTarget>
-    </PlatformTarget>
+    <PlatformTarget></PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -40,7 +37,7 @@
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
   <ItemGroup>
     <None Include="DUsAndMatching.fsx" />
-    <Compile Include="Trie.fs" />
+    <Compile Include="Engine.fs" />
     <None Include="ListsAndMatching.fsx" />
     <None Include="Transporter.fsx" />
     <None Include="Maps.fsx" />
@@ -53,5 +50,7 @@
     <Compile Include="insertWord.fsx" />
     <Compile Include="SetPlay.fsx" />
     <Compile Include="Soliloquy.fsx" />
+    <Compile Include="Exposure.fsx" />
+    <Compile Include="TestExposure.fsx" />
   </ItemGroup>
 </Project>
